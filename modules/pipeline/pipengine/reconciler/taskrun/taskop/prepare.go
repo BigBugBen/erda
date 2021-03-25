@@ -233,6 +233,10 @@ func (pre *prepare) makeTaskRun() error {
 	task.Extra.PrivateEnvs[actionagent.METAFILE] = pvolumes.MakeTaskContainerMetafilePath(task.Name)
 	task.Extra.PrivateEnvs[actionagent.UPLOADDIR] = pvolumes.ContainerUploadDir
 	task.Extra.PublicEnvs[pvolumes.EnvKeyMesosFetcherURI] = pvolumes.MakeMesosFetcherURI4AliyunRegistrySecret(mountPoint)
+	task.Extra.PublicEnvs["PIPELINE_TIME_BEGIN_TIMESTAMP"] = strconv.FormatInt(time.Now().Unix(), 10)
+	if p.TimeBegin != nil {
+		task.Extra.PublicEnvs["PIPELINE_TIME_BEGIN_TIMESTAMP"] = strconv.FormatInt(p.TimeBegin.Unix(), 10)
+	}
 	// handle dice openapi
 	for k, v := range task.Extra.PrivateEnvs {
 		if strings.HasPrefix(k, "DICE_OPENAPI_") {
